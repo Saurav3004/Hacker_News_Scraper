@@ -8,7 +8,7 @@ export const register = async (req, res) => {
   const hashed = await bcrypt.hash(password, 10);
   const user = await User.create({ email, password: hashed });
 
-  res.json({ token: generateToken(user._id) });
+  return res.json({ token: generateToken(user._id) });
 };
 
 export const login = async (req, res) => {
@@ -20,5 +20,5 @@ export const login = async (req, res) => {
     return res.status(400).json({ message: "Invalid credentials" });
   }
 
-  res.json({ token: generateToken(user._id) });
+  return res.json({ token: generateToken(user._id) });
 };

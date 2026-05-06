@@ -1,9 +1,35 @@
+import mongoose from "mongoose";
 import Story from "../models/Story.js";
 import User from "../models/User.js";
 
 export const getStories = async (req, res) => {
-  const stories = await Story.find().sort({ points: -1 });
-  res.json(stories);
+  try {
+    let page = parseInt(req.query.page) || 1;
+    let limit = parseInt(req.query.limit) || 10;
+
+    if (page < 1) page = 1;
+    if (limit > 50) limit = 50;
+
+    const skip = (page - 1) * limit;
+
+    const total = await Story.countDocuments();
+
+    const stories = await Story.find()
+      .sort({ points: -1 })
+      .skip(skip)
+      .limit(limit);
+
+    res.json({
+      data: stories,
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit)
+    });
+
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
 
 export const getStory = async (req, res) => {
@@ -12,15 +38,37 @@ export const getStory = async (req, res) => {
 };
 
 export const toggleBookmark = async (req, res) => {
-  const user = await User.findById(req.user._id);
-  const id = req.params.id;
+  try {
+    const user = req.user;
+    const storyId = req.params.id;
 
-  if (user.bookmarks.includes(id)) {
-    user.bookmarks.pull(id);
-  } else {
-    user.bookmarks.push(id);
+    // Validate ID
+    if (!mongoose.Types.ObjectId.isValid(storyId)) {
+      return res.status(400).json({ message: "Invalid story ID" });
+    }
+
+    const alreadyBookmarked = user.bookmarks.some(
+      (id) => id.toString() === storyId
+    );
+
+    if (alreadyBookmarked) {
+      user.bookmarks = user.bookmarks.filter(
+        (id) => id.toString() !== storyId
+      );
+    } else {
+      user.bookmarks.push(storyId);
+    }
+
+    await user.save();
+
+    res.json({
+      message: alreadyBookmarked
+        ? "Bookmark removed"
+        : "Bookmark added",
+      bookmarks: user.bookmarks
+    });
+
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
-
-  await user.save();
-  res.json(user.bookmarks);
 };

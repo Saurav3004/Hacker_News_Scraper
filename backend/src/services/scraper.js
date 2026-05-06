@@ -1,6 +1,6 @@
 import axios from "axios";
-import cheerio from "cheerio";
 import Story from "../models/Story.js";
+import * as cheerio from 'cheerio';
 
 export const scrapeHackerNews = async () => {
   const { data } = await axios.get("https://news.ycombinator.com");
