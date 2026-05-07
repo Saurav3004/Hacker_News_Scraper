@@ -27,4 +27,11 @@ app.post("/api/scrape", async (req, res) => {
 
 scrapeHackerNews();
 
+
+app.get("/health",(_req,res)  => {
+  return res.status(200).json({
+    message:"Server is healthy"
+  })
+})
+
 app.listen(process.env.PORT, () => console.log("Server running"));
