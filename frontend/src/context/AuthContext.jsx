@@ -10,6 +10,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (data) => {
     setLoading(true);
     const res = await API.post("/auth/login", data);
+    console.log(res)
     localStorage.setItem("token", res.data.token);
     setToken(res.data.token);
     setLoading(false);
