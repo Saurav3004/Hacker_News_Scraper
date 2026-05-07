@@ -25,6 +25,6 @@ app.post("/api/scrape", async (req, res) => {
   res.json(data);
 });
 
-// scrapeHackerNews();
+scrapeHackerNews();
 
-app.listen(5000, () => console.log("Server running"));
+app.listen(process.env.PORT, () => console.log("Server running"));

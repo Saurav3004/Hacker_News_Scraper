@@ -246,9 +246,8 @@ The React app starts on `http://localhost:5173` by default.
 
 ```env
 PORT=5000
-MONGO_URI=mongodb://localhost:27017/hackernews
+MONGO_URI=mongodb://localhost:27017/
 JWT_SECRET=your_jwt_secret_key
-JWT_EXPIRES_IN=7d
 ```
 
 | Variable | Description |
