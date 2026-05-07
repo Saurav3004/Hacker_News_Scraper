@@ -14,8 +14,9 @@ const Register = () => {
     try {
       await register(form);
       nav("/");
-    } catch {
-      setError("Something went wrong. Please try again.");
+    } catch(err) {
+      alert(err)
+      setError(err);
     }
   };
 

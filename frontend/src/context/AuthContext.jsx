@@ -8,21 +8,40 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
 
   const login = async (data) => {
-    setLoading(true);
-    const res = await API.post("/auth/login", data);
-    console.log(res)
-    localStorage.setItem("token", res.data.token);
-    setToken(res.data.token);
-    setLoading(false);
+    try {
+      setLoading(true);
+
+      const res = await API.post("/auth/login", data);
+
+      localStorage.setItem("token", res.data.token);
+
+      setToken(res.data.token);
+      return res.data;
+    } catch (error) {
+      throw error.response?.data?.message || "Login failed";
+    }finally {
+      setLoading(false)
+    }
+    
   };
 
   const register = async (data) => {
+  try {
     setLoading(true);
+
     const res = await API.post("/auth/register", data);
+
     localStorage.setItem("token", res.data.token);
     setToken(res.data.token);
+
+    return res.data;
+
+  } catch (error) {
+    throw error.response?.data?.message || "Registration failed";
+  } finally {
     setLoading(false);
-  };
+  }
+};
 
   const logout = () => {
     localStorage.removeItem("token");
