@@ -209,8 +209,8 @@ Query parameters: `page` (default: 1), `limit` (default: 10)
 ### 1. Clone the repository
 
 ```bash
-git clone <repository-url>
-cd <repository-name>
+git clone https://github.com/Saurav3004/Hacker_News_Scraper.git
+cd Hacker_News_Scraper
 ```
 
 ### 2. Set up the backend
